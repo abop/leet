@@ -2,7 +2,7 @@ package com.alibaba.gufei.demo;
 
 public class Leet {
     public static void main(String[] args) {
-        System.out.println(longestPalindrome2("cc"));
+        System.out.println(longestPalindrome2("abcba"));
     }
 
     private static int compareCharAt(String s, int index1, int index2) {
@@ -16,27 +16,27 @@ public class Leet {
         }
         String palindrome = s.substring(0, 1);
         int core = 0;
-        int tHead, tTail;
+        int left, right;
         while (core < len - 1) {
-            String tLongestPalindrome;
-            tHead = core;
-            if (compareCharAt(s, core, core + 1) == 0) {
-                // aa
-                tTail = core + 1;
-                tLongestPalindrome = getLongestPalindrome(s, len, tHead, tTail);
-                if (tLongestPalindrome.length() > palindrome.length()) {
-                    palindrome = tLongestPalindrome;
+
+            left = right = core;
+
+            while (right + 1 < s.length() && s.charAt(core) == s.charAt(right + 1)) {
+                right++;
+            }
+            core = (left + right) / 2 + 1;
+
+            while (left - 1 >= 0 && right + 1 < len) {
+                if (s.charAt(left - 1) == s.charAt(right + 1)) {
+                    left--;
+                    right++;
+                } else {
+                    break;
                 }
             }
-            if (core + 2 < len && compareCharAt(s, core, core + 2) == 0) {
-                // aba
-                tTail = core + 2;
-                tLongestPalindrome = getLongestPalindrome(s, len, tHead, tTail);
-                if (tLongestPalindrome.length() > palindrome.length()) {
-                    palindrome = tLongestPalindrome;
-                }
+            if (right - left + 1 > palindrome.length()) {
+                palindrome = s.substring(left, right + 1);
             }
-            core++;
         }
         return palindrome;
     }
@@ -56,7 +56,7 @@ public class Leet {
     public static String longestPalindrome(String s) {
         int len = s.length();
         if (len <= 1) {
-            return "";
+            return s;
         }
         String palindrome = s.substring(0, 1);
         for (int head = 0, tail = len - 1;
